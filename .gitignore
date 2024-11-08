@@ -1,0 +1,12 @@
+# Ignore Python virtual environments
+myenv/
+
+# Ignore model files
+*.h5
+
+# Ignore data files
+*.pkl
+*.csv
+
+# Ignore VSCode settings
+.vscode/
