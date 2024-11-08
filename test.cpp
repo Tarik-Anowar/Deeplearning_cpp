@@ -52,7 +52,6 @@ int main() {
     Model model;
 
     model.add_layer(784, 128, relu, relu_derivative);
-    model.add_layer(128, 64, relu, relu_derivative);
     model.add_layer(64, 10, sigmoid, sigmoid_derivative);
 
 
