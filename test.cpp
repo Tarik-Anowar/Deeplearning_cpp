@@ -52,7 +52,7 @@ int main() {
     Model model;
 
     model.add_layer(784, 128, relu, relu_derivative);
-    model.add_layer(64, 10, sigmoid, sigmoid_derivative);
+    model.add_layer(128, 10, sigmoid, sigmoid_derivative);
 
 
     Optimizer* optimizer = new AdamOptimizer(0.01, 0.9, 0.999, 1e-8);
