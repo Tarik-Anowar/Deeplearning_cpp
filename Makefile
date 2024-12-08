@@ -1,15 +1,16 @@
 # Compiler and flags
 CXX = g++
-CXXFLAGS = -std=c++11 -Wall -g
+CXXFLAGS = -std=c++17 -Wall -g -fopenmp
 
 # Library files (source files from lib folder)
 LIB_SRC = \
-          lib/model.cpp \
-          lib/backpropagation.cpp \
-          lib/optimizer.cpp \
-          lib/activation.cpp \
-          lib/layer.cpp \
-          lib/loss.cpp
+    lib/model.cpp \
+	lib/layer.cpp \
+    lib/computation_graph.cpp \
+    lib/optimizer.cpp \
+    lib/activation.cpp \
+	lib/node.cpp \
+    lib/loss.cpp
 
 # Object files for library sources
 LIB_OBJ = $(LIB_SRC:.cpp=.o)
@@ -33,7 +34,7 @@ $(TEST_OBJ): $(TEST_SRC)
 
 # Rule to create the executable
 $(TARGET): $(LIB_OBJ) $(TEST_OBJ)
-	$(CXX) $(LIB_OBJ) $(TEST_OBJ) -o $(TARGET)
+	$(CXX) $(CXXFLAGS) $(LIB_OBJ) $(TEST_OBJ) -o $(TARGET)
 
 # Clean the build
 clean:
@@ -44,7 +45,7 @@ lib: $(LIB_OBJ)
 
 # Compile only test file (run `make test`)
 test: $(TEST_OBJ)
-	$(CXX) $(TEST_OBJ) $(LIB_OBJ) -o $(TARGET)
+	$(CXX) $(CXXFLAGS) $(TEST_OBJ) $(LIB_OBJ) -o $(TARGET)
 
 # Run the program
 run: $(TARGET)

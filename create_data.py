@@ -2,7 +2,7 @@ import pickle
 import numpy as np
 
 # Load the pickle file
-with open('mnist_subset_data.pkl', 'rb') as f:
+with open('iris_subset_data.pkl', 'rb') as f:
     data = pickle.load(f)
 
 X_train = data['X_train']

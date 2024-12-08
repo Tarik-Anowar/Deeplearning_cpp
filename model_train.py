@@ -1,36 +1,40 @@
+import numpy as np
+import pandas as pd
 import tensorflow as tf
-import pickle
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score
+from tensorflow.keras import layers, models
 
-# Load the data from the pickle file
-with open('mnist_subset_data.pkl', 'rb') as f:
-    data = pickle.load(f)
+# Load the training and testing data from CSV files
+X_train = pd.read_csv('X_train.csv', header=None).values
+X_test = pd.read_csv('X_test.csv', header=None).values
+y_train = pd.read_csv('y_train.csv', header=None).values
+y_test = pd.read_csv('y_test.csv', header=None).values
 
-X = data['X_train']
-y = data['y_train']
+# Check the shape of the data
+print(f'X_train shape: {X_train.shape}')
+print(f'y_train shape: {y_train.shape}')
+print(f'X_test shape: {X_test.shape}')
+print(f'y_test shape: {y_test.shape}')
 
-# Split the data into training and testing sets (80% train, 20% test)
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+# Define the neural network model using Keras
+model = models.Sequential()
 
-# Define a simple neural network model
-model = tf.keras.Sequential([
-    tf.keras.layers.Dense(128, activation='relu', input_shape=(784,)),
-    tf.keras.layers.Dense(10, activation='softmax')
-])
+# Add the input layer with 4 features (the same as the Iris dataset)
+model.add(layers.InputLayer(input_shape=(4,)))
 
-# Compile the model with a loss function, optimizer, and metrics
-model.compile(optimizer='adam',
-              loss='categorical_crossentropy',
-              metrics=['accuracy'])
+# Add a hidden layer with 64 neurons and ReLU activation
+model.add(layers.Dense(64, activation='relu'))
 
-# Train the model on the training set
-model.fit(X_train, y_train, epochs=100)
+# Add the output layer with 3 neurons (for 3 classes) and softmax activation
+model.add(layers.Dense(3, activation='softmax'))
 
-# Evaluate the model on the test set
-test_loss, test_accuracy = model.evaluate(X_test, y_test, verbose=0)
-print(f"Test Accuracy: {test_accuracy * 100:.2f}%")
+# Compile the model using Adam optimizer and categorical crossentropy loss
+model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
 
-# Save the trained model
-model.save('mnist_trained_model.h5')
-print("Model trained and saved to 'mnist_trained_model.h5'")
+# Train the model with the training data (epochs = 50, batch_size = 32)
+model.fit(X_train, y_train, epochs=50, batch_size=32, verbose=1)
+
+# Evaluate the model using the test data
+loss, accuracy = model.evaluate(X_test, y_test)
+
+# Print the accuracy of the model
+print(f'Test Accuracy: {accuracy * 100:.2f}%')

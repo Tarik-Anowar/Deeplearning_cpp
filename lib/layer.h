@@ -3,26 +3,33 @@
 
 #include <vector>
 #include <functional>
-#include <cstdlib>
-#include <ctime>
-#include <numeric>
-#include<omp.h>
+#include "computation_graph.h"
 
-using Matrix = std::vector<std::vector<double>>;
 using Vector = std::vector<double>;
+using Matrix = std::vector<std::vector<double>>;
 
-class Layer
-{
-
+class Layer {
 public:
-    int num_neurons;
-    Matrix W;
-    std::vector<double> b;
-    std::function<double(double)> activation_fn;
-    std::function<double(double)> activation_fn_derivative;
+    int num_neurons;  
+    int input_size;   
+    Matrix weights;   
+    Vector biases;    
+    std::function<Vector(const Vector&)> activation;            
+    std::function<Vector(const Vector&)> activation_derivative; 
 
-    Layer(int num_neurons, int input_size, std::function<double(double)> activation_fn, std::function<double(double)> activation_fn_derivative);
-    Vector forward(const Vector &input);
+    // Constructor
+    Layer(int num_neurons, int input_size, 
+          std::function<Vector(const Vector&)> activation,
+          std::function<Vector(const Vector&)> activation_derivative);
+
+    void forward(const Vector& input, ComputationGraph& graph);
+
+    Matrix& get_weights();
+
+    Vector& get_biases();
+
+private:
+    double dot_product(const Vector& a, const Vector& b);
 };
 
 #endif
